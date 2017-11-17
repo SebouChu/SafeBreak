@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SafeBreak</string>
+    <string name="bestScoreText">Meilleur record : %1$s:%2$s</string>
 </resources>

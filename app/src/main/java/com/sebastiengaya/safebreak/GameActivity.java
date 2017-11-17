@@ -1,6 +1,7 @@
 package com.sebastiengaya.safebreak;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -8,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.hardware.TriggerEvent;
 import android.hardware.TriggerEventListener;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -20,10 +22,16 @@ public class GameActivity extends AppCompatActivity {
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private SensorEventListener rvSensorListener;
-    private Integer[] password;
     private Vibrator mVibrator;
+
     private int[] combination = { 66, -30, 42 };
     private Boolean[] combinationState = new Boolean[combination.length];
+
+    private TextView zValueText;
+    private TextView gameStateText;
+    private Chronometer gameChrono;
+
+    public static final String EXTRA_SCORE = "com.sebastiengaya.safebreak.SCORE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +46,9 @@ public class GameActivity extends AppCompatActivity {
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        final TextView zValueText = findViewById(R.id.valuesText);
-        final TextView gameStateText = findViewById(R.id.gameStateText);
-        final Chronometer gameChrono = findViewById(R.id.gameChrono);
+        zValueText = findViewById(R.id.valuesText);
+        gameStateText = findViewById(R.id.gameStateText);
+        gameChrono = findViewById(R.id.gameChrono);
 
         gameStateText.setText("Ongoing");
         gameChrono.start();
@@ -93,10 +101,7 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
 
-            private void endGame() {
-                gameStateText.setText("Over");
-                gameChrono.stop();
-            }
+
 
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -104,5 +109,13 @@ public class GameActivity extends AppCompatActivity {
             }
         };
         mSensorManager.registerListener(rvSensorListener, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    private void endGame() {
+        gameChrono.stop();
+        int elapsedSeconds = (int) ((SystemClock.elapsedRealtime() - gameChrono.getBase()) / 1000);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(EXTRA_SCORE, elapsedSeconds);
+        startActivity(intent);
     }
 }
