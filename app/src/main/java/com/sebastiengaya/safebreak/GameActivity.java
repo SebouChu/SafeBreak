@@ -2,13 +2,10 @@ package com.sebastiengaya.safebreak;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.hardware.TriggerEvent;
-import android.hardware.TriggerEventListener;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,7 +25,6 @@ public class GameActivity extends AppCompatActivity {
     private Boolean[] combinationState = new Boolean[combination.length];
 
     private TextView zValueText;
-    private TextView gameStateText;
     private Chronometer gameChrono;
 
     public static final String EXTRA_SCORE = "com.sebastiengaya.safebreak.SCORE";
@@ -47,10 +43,8 @@ public class GameActivity extends AppCompatActivity {
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         zValueText = findViewById(R.id.valuesText);
-        gameStateText = findViewById(R.id.gameStateText);
         gameChrono = findViewById(R.id.gameChrono);
 
-        gameStateText.setText("Ongoing");
         gameChrono.start();
 
         if (mSensor == null) {
