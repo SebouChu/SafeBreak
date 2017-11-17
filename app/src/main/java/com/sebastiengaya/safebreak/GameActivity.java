@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
+import android.widget.Chronometer;
 import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity {
@@ -39,8 +40,10 @@ public class GameActivity extends AppCompatActivity {
 
         final TextView zValueText = findViewById(R.id.valuesText);
         final TextView gameStateText = findViewById(R.id.gameStateText);
+        final Chronometer gameChrono = findViewById(R.id.gameChrono);
 
         gameStateText.setText("Ongoing");
+        gameChrono.start();
 
         if (mSensor == null) {
             Log.e("SENSOR_ERROR", "No gyroscope found");
@@ -92,6 +95,7 @@ public class GameActivity extends AppCompatActivity {
 
             private void endGame() {
                 gameStateText.setText("Over");
+                gameChrono.stop();
             }
 
             @Override
