@@ -17,6 +17,8 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Random;
+
 public class GameActivity extends AppCompatActivity {
 
     private SensorManager mSensorManager;
@@ -24,7 +26,7 @@ public class GameActivity extends AppCompatActivity {
     private SensorEventListener rvSensorListener;
     private Vibrator mVibrator;
 
-    private int[] combination = { 66, -30, 42 };
+    private int[] combination = new int[3];
     private Boolean[] combinationState = new Boolean[3];
 
     private TextView zValueText;
@@ -42,7 +44,18 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
+        Double randomNum = Math.random();
+        for (int i = 0 ; i < combination.length ; i++) {
+            combination[i] = (int) (Math.random() * 128);
+        }
+        if (randomNum < 0.5) {
+            // + , - , +
+            combination[1] = - combination[1];
+        } else {
+            // - , + , -
+            combination[0] = - combination[0];
+            combination[2] = - combination[2];
+        }
         for (int i = 0 ; i < combinationState.length ; i++) {
             combinationState[i] = false;
             int resId = getResources().getIdentifier("imageState" + (i+1), "id", getPackageName());
@@ -120,7 +133,7 @@ public class GameActivity extends AppCompatActivity {
 
             }
         };
-        mSensorManager.registerListener(rvSensorListener, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(rvSensorListener, mSensor, 500);
     }
 
     private void endGame() {
