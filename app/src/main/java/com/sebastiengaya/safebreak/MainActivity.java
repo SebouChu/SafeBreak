@@ -13,12 +13,14 @@ import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
+    TextView bestScoreText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView bestScoreText = findViewById(R.id.bestScoreText);
+        bestScoreText = findViewById(R.id.bestScoreText);
 
         SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("user_prefs", MODE_PRIVATE);
         int bestScore = sharedPreferences.getInt("bestScore", 999999);
@@ -50,5 +52,11 @@ public class MainActivity extends AppCompatActivity {
     public void onClickPlayBtn(View view) {
         Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
+    }
+
+    public void onClickResetBtn(View view) {
+        SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("user_prefs", MODE_PRIVATE);
+        sharedPreferences.edit().putInt("bestScore", 999999).apply();
+        bestScoreText.setText("Pas de record.");
     }
 }
