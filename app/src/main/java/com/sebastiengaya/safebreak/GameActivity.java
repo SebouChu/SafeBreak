@@ -10,6 +10,7 @@ import android.hardware.TriggerEvent;
 import android.hardware.TriggerEventListener;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -19,18 +20,28 @@ public class GameActivity extends AppCompatActivity {
     private Sensor mSensor;
     private SensorEventListener rvSensorListener;
     private Integer[] password;
+    private Vibrator mVibrator;
+    private int[] combination = { 66, -30, 42 };
+    private Boolean[] combinationState = new Boolean[combination.length];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        password = new Integer[3];
-        password[0] = 40;
-        password[1] = -40;
-        password[2] = 20;
-        final TextView valuesText = findViewById(R.id.valuesText);
+
+        for (int i = 0 ; i < combinationState.length ; i++) {
+            combinationState[i] = false;
+        }
+
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        final TextView zValueText = findViewById(R.id.valuesText);
+        final TextView gameStateText = findViewById(R.id.gameStateText);
+
+        gameStateText.setText("Ongoing");
+
         if (mSensor == null) {
             Log.e("SENSOR_ERROR", "No gyroscope found");
             finish();
@@ -51,15 +62,36 @@ public class GameActivity extends AppCompatActivity {
 
                 // Convert to orientations
                 float[] orientations = new float[3];
-                String[] texts = new String[3];
+
                 SensorManager.getOrientation(remappedRotationMatrix, orientations);
 
-                for(int i = 0; i < 3; i++) {
-                    orientations[i] = (float)(Math.toDegrees(orientations[i]));
-                    texts[i] = Integer.toString((int) orientations[i]);
-                }
+                Integer zValue = (int) (Math.toDegrees(orientations[2]));
 
-                valuesText.setText(texts[0] + " - " + texts[1] + " - " + texts[2]);
+                zValueText.setText(Integer.toString(zValue));
+
+                checkCombination(zValue);
+            }
+
+            private void checkCombination(Integer z) {
+                for (int i = 0 ; i < combination.length ; i++) {
+                    // If number not checked
+                    if (!combinationState[i]) {
+                        if(z == combination[i]) {
+                            combinationState[i] = true;
+                            mVibrator.vibrate(200);
+
+                            // Si denier nombre trouvé
+                            if (i == combination.length - 1) {
+                                endGame();
+                            }
+                        }
+                        return;
+                    }
+                }
+            }
+
+            private void endGame() {
+                gameStateText.setText("Over");
             }
 
             @Override
@@ -67,9 +99,6 @@ public class GameActivity extends AppCompatActivity {
 
             }
         };
-
         mSensorManager.registerListener(rvSensorListener, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
-
-
     }
 }
