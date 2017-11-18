@@ -110,6 +110,15 @@ public class GameActivity extends AppCompatActivity {
                 for (int i = 0 ; i < combination.length ; i++) {
                     // If number not checked
                     if (!combinationState[i]) {
+                        if (i > 0) {
+                            if ((combination[i-1] < 0 && z < combination[i-1]) || (combination[i-1] > 0 && z > combination[i-1])) {
+                                for (int j = 0 ; j < combination.length ; j++) {
+                                    combinationState[j] = false;
+                                    imageStates[j].setImageDrawable(getResources().getDrawable(R.drawable.cancel));
+                                }
+                                return;
+                            }
+                        }
                         if(z == combination[i]) {
                             combinationState[i] = true;
                             mVibrator.vibrate(200);
@@ -117,7 +126,6 @@ public class GameActivity extends AppCompatActivity {
 
                             // Si denier nombre trouvé
                             if (i == combination.length - 1) {
-                                Log.d("INTENT", "Going to Main");
                                 endGame();
                             }
                         }
