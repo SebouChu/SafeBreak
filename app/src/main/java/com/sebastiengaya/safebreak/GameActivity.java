@@ -37,6 +37,7 @@ public class GameActivity extends AppCompatActivity {
     private Button homeBtn;
 
     private int elapsedSeconds;
+    private int previousZ = 200;
 
     public static final String EXTRA_SCORE = "com.sebastiengaya.safebreak.SCORE";
 
@@ -102,8 +103,8 @@ public class GameActivity extends AppCompatActivity {
                 Integer zValue = (int) (Math.toDegrees(orientations[2]));
 
                 zValueText.setText(Integer.toString(zValue));
-
                 checkCombination(zValue);
+                previousZ = zValue;
             }
 
             private void checkCombination(Integer z) {
@@ -119,7 +120,7 @@ public class GameActivity extends AppCompatActivity {
                                 return;
                             }
                         }
-                        if(z == combination[i]) {
+                        if(previousZ != 200 && z == combination[i] && ((previousZ > z && combination[i] < 0) || (previousZ < z && combination[i] > 0))) {
                             combinationState[i] = true;
                             mVibrator.vibrate(200);
                             imageStates[i].setImageDrawable(getResources().getDrawable(R.drawable.checked));
