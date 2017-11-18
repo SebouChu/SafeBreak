@@ -95,4 +95,15 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gameChrono"/>
 
+    <Button
+        android:id="@+id/unlockBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:onClick="onClickUnlockBtn"
+        android:text="Déverrouiller"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/endText"/>
+
 </android.support.constraint.ConstraintLayout>
