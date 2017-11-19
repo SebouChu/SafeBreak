@@ -27,7 +27,7 @@ public class GameActivity extends AppCompatActivity {
     private Vibrator mVibrator;
 
     private int[] combination = new int[3];
-    private Boolean[] combinationState = new Boolean[3];
+    private int combinationState;
 
     private TextView zValueText;
     private Chronometer gameChrono;
@@ -117,41 +117,40 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void checkCombination(Integer z) {
-        for (int i = 0 ; i <= combination.length ; i++) {
-            // On vérifie si le nombre trouvé précédemment est dépassé ou si le dernier chiffre a été trouvé mais Z est à une autre position
-            if (i > 0) {
-                if ((combination[i - 1] < 0 && z < combination[i - 1]) || (combination[i - 1] > 0 && z > combination[i - 1]) || (i == combination.length && z != combination[i-1])) {
-                    unlockBtn.setVisibility(View.INVISIBLE);
-                    for (int j = 0; j < combination.length; j++) {
-                        // On reset le combinationState
-                        combinationState[j] = false;
-                        imageStates[j].setImageDrawable(getResources().getDrawable(R.drawable.cancel));
-                    }
-                    return;
+
+        // On vérifie qu'on a trouvé le premier nombre
+        if (combinationState > 0) {
+            int previousCombination = combinationState - 1;
+            // Si on dépasse le nombre trouvé précédemment
+            if ((combination[previousCombination] < 0 && z < combination[previousCombination]) || (combination[previousCombination] > 0 && z > combination[previousCombination]) || (combinationState == combination.length && z != combination[previousCombination])) {
+                unlockBtn.setVisibility(View.INVISIBLE);
+                // On reset le combinationState
+                combinationState = 0;
+                for (int j = 0; j < combination.length; j++) {
+                    // On réinitialise les images
+                    imageStates[j].setImageDrawable(getResources().getDrawable(R.drawable.cancel));
                 }
+                return;
             }
+        }
 
-            // On vérifie qu'on cherche un nombre
-            if (i != combination.length) {
-                // On regarde si le nombre de l'itération a déjà été trouvé
-                if (!combinationState[i]) {
-                    // Si previousZ a été initialisé ET que la position actuelle de Z correspond au nombre à trouver ET le Z précédent correspond au sens de lecture
-                    if(previousZ != 200 && z == combination[i] && ((previousZ > z && combination[i] < 0) || (previousZ < z && combination[i] > 0))) {
-                        // On valide le nombre
-                        combinationState[i] = true;
-                        mVibrator.vibrate(200);
-                        imageStates[i].setImageDrawable(getResources().getDrawable(R.drawable.checked));
+        // On vérifie qu'on cherche un nombre
+        if (combinationState != combination.length) {
+            // Si previousZ a été initialisé ET que la position actuelle de Z correspond au nombre à trouver ET le Z précédent correspond au sens de lecture
+            if(previousZ != 200 && z == combination[combinationState] && ((previousZ > z && combination[combinationState] < 0) || (previousZ < z && combination[combinationState] > 0))) {
+                // On valide le nombre
+                imageStates[combinationState].setImageDrawable(getResources().getDrawable(R.drawable.checked));
+                combinationState++;
+                mVibrator.vibrate(200);
 
-                        // Si denier nombre trouvé
-                        if (i == combination.length - 1) {
-                            // On fait apparaître le bouton de déverrouillage
-                            unlockBtn.setVisibility(View.VISIBLE);
-                        }
-                    }
-                    return;
+                // Si denier nombre trouvé
+                if (combinationState == combination.length) {
+                    // On fait apparaître le bouton de déverrouillage
+                    unlockBtn.setVisibility(View.VISIBLE);
                 }
             }
         }
+
     }
 
     public void onClickUnlockBtn(View view) {
@@ -177,9 +176,7 @@ public class GameActivity extends AppCompatActivity {
             combination[0] = - combination[0];
             combination[2] = - combination[2];
         }
-        for (int i = 0 ; i < combinationState.length ; i++) {
-            combinationState[i] = false;
-        }
+        combinationState = 0;
     }
 
     private void getUIElements() {
@@ -188,7 +185,7 @@ public class GameActivity extends AppCompatActivity {
         unlockBtn = findViewById(R.id.unlockBtn);
         endText = findViewById(R.id.endText);
         finishBtn = findViewById(R.id.finishBtn);
-        for (int i = 0 ; i < combinationState.length ; i++) {
+        for (int i = 0 ; i < combination.length ; i++) {
             int resId = getResources().getIdentifier("imageState" + (i+1), "id", getPackageName());
             imageStates[i] = findViewById(resId);
         }
