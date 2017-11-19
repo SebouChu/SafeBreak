@@ -59,8 +59,10 @@ public class GameActivity extends AppCompatActivity {
         getUIElements();
 
         unlockBtn.setVisibility(View.INVISIBLE);
+        unlockBtn.setEnabled(false);
         endText.setVisibility(View.INVISIBLE);
         finishBtn.setVisibility(View.INVISIBLE);
+        finishBtn.setEnabled(false);
 
         gameChrono.start();
 
@@ -124,6 +126,7 @@ public class GameActivity extends AppCompatActivity {
             // Si on dépasse le nombre trouvé précédemment
             if ((combination[previousCombination] < 0 && z < combination[previousCombination]) || (combination[previousCombination] > 0 && z > combination[previousCombination]) || (combinationState == combination.length && z != combination[previousCombination])) {
                 unlockBtn.setVisibility(View.INVISIBLE);
+                unlockBtn.setEnabled(false);
                 // On reset le combinationState
                 combinationState = 0;
                 for (int j = 0; j < combination.length; j++) {
@@ -147,6 +150,7 @@ public class GameActivity extends AppCompatActivity {
                 if (combinationState == combination.length) {
                     // On fait apparaître le bouton de déverrouillage
                     unlockBtn.setVisibility(View.VISIBLE);
+                    unlockBtn.setEnabled(true);
                 }
             }
         }
@@ -177,6 +181,7 @@ public class GameActivity extends AppCompatActivity {
             combination[2] = - combination[2];
         }
         combinationState = 0;
+        // Log.d("GENERATED", "Combination generated : "+combination[0]+", "+combination[1]+", "+combination[2]);
     }
 
     private void getUIElements() {
@@ -195,8 +200,10 @@ public class GameActivity extends AppCompatActivity {
         gameChrono.stop();
         elapsedSeconds = (int) ((SystemClock.elapsedRealtime() - gameChrono.getBase()) / 1000);
         mSensorManager.unregisterListener(rvSensorListener);
+        unlockBtn.setEnabled(false);
         unlockBtn.setVisibility(View.INVISIBLE);
         endText.setVisibility(View.VISIBLE);
+        finishBtn.setEnabled(true);
         finishBtn.setVisibility(View.VISIBLE);
     }
 
