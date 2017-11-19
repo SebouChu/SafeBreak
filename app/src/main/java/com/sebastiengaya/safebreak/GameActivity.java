@@ -58,7 +58,6 @@ public class GameActivity extends AppCompatActivity {
 
         getUIElements();
 
-        unlockBtn.setVisibility(View.INVISIBLE);
         unlockBtn.setEnabled(false);
         endText.setVisibility(View.INVISIBLE);
         finishBtn.setVisibility(View.INVISIBLE);
@@ -125,7 +124,6 @@ public class GameActivity extends AppCompatActivity {
             int previousCombination = combinationState - 1;
             // Si on dépasse le nombre trouvé précédemment
             if ((combination[previousCombination] < 0 && z < combination[previousCombination]) || (combination[previousCombination] > 0 && z > combination[previousCombination]) || (combinationState == combination.length && z != combination[previousCombination])) {
-                unlockBtn.setVisibility(View.INVISIBLE);
                 unlockBtn.setEnabled(false);
                 // On reset le combinationState
                 combinationState = 0;
@@ -149,7 +147,6 @@ public class GameActivity extends AppCompatActivity {
                 // Si denier nombre trouvé
                 if (combinationState == combination.length) {
                     // On fait apparaître le bouton de déverrouillage
-                    unlockBtn.setVisibility(View.VISIBLE);
                     unlockBtn.setEnabled(true);
                 }
             }
