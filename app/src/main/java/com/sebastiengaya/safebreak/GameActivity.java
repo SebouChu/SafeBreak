@@ -17,6 +17,8 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 public class GameActivity extends AppCompatActivity {
 
     private SensorManager mSensorManager;
@@ -34,7 +36,7 @@ public class GameActivity extends AppCompatActivity {
     private Button unlockBtn;
 
     private TextView endText;
-    private Button homeBtn;
+    private Button finishBtn;
 
     private int elapsedSeconds;
     private int previousZ = 200;
@@ -58,7 +60,7 @@ public class GameActivity extends AppCompatActivity {
 
         unlockBtn.setVisibility(View.INVISIBLE);
         endText.setVisibility(View.INVISIBLE);
-        homeBtn.setVisibility(View.INVISIBLE);
+        finishBtn.setVisibility(View.INVISIBLE);
 
         gameChrono.start();
 
@@ -87,7 +89,7 @@ public class GameActivity extends AppCompatActivity {
 
                 Integer zValue = (int) (Math.toDegrees(orientations[2]));
 
-                zValueText.setText(Integer.toString(zValue));
+                zValueText.setText(String.format(Locale.getDefault(), "%01d°", zValue));
                 checkCombination(zValue);
                 previousZ = zValue;
             }
@@ -185,7 +187,7 @@ public class GameActivity extends AppCompatActivity {
         gameChrono = findViewById(R.id.gameChrono);
         unlockBtn = findViewById(R.id.unlockBtn);
         endText = findViewById(R.id.endText);
-        homeBtn = findViewById(R.id.homeBtn);
+        finishBtn = findViewById(R.id.finishBtn);
         for (int i = 0 ; i < combinationState.length ; i++) {
             int resId = getResources().getIdentifier("imageState" + (i+1), "id", getPackageName());
             imageStates[i] = findViewById(resId);
@@ -198,7 +200,7 @@ public class GameActivity extends AppCompatActivity {
         mSensorManager.unregisterListener(rvSensorListener);
         unlockBtn.setVisibility(View.INVISIBLE);
         endText.setVisibility(View.VISIBLE);
-        homeBtn.setVisibility(View.VISIBLE);
+        finishBtn.setVisibility(View.VISIBLE);
     }
 
 

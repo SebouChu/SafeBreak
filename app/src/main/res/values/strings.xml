@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">SafeBreak</string>
-    <string name="bestScoreText">Meilleur record : %1$s:%2$s</string>
+
+    <string name="welcomeText">Trouverez-vous la bonne combinaison ?</string>
+    <string name="noBestScore">Pas de record.</string>
+    <string name="bestScoreText">Record : %1$s:%2$s</string>
+    <string name="playBtn">Jouer</string>
+    <string name="resetScoreBtn">Réinitialiser le record</string>
+
+    <string name="chronoText">Chronomètre</string>
+    <string name="unlockBtn">Déverrouiller</string>
+    <string name="congrats">Félicitations ! Tu as ouvert le coffre-fort !</string>
+    <string name="finishBtn">Terminer</string>
 </resources>

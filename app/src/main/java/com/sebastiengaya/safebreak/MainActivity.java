@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView bestScoreText;
@@ -33,17 +35,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        String minutes = String.format("%02d", ((int) bestScore / 60));
-        String seconds = String.format("%02d", (bestScore % 60));
-
         if (bestScore == 999999) {
             // Pas de record
-            bestScoreText.setText("Pas de record.");
+            bestScoreText.setText(getResources().getString(R.string.noBestScore));
         } else {
             Resources res = getResources();
-            String bestScoreString = res.getString(R.string.bestScoreText, minutes, seconds);
+            String bestScoreString = res.getString(R.string.bestScoreText, String.format(Locale.getDefault(), "%02d", ((int) bestScore / 60)), String.format(Locale.getDefault(), "%02d", (bestScore % 60)));
             bestScoreText.setText(bestScoreString);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
     public void onClickPlayBtn(View view) {
@@ -54,6 +58,6 @@ public class MainActivity extends AppCompatActivity {
     public void onClickResetBtn(View view) {
         SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("user_prefs", MODE_PRIVATE);
         sharedPreferences.edit().putInt("bestScore", 999999).apply();
-        bestScoreText.setText("Pas de record.");
+        bestScoreText.setText(getResources().getString(R.string.noBestScore));
     }
 }
